@@ -1,33 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
   <head>
     <title>NILN</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="css/niln.main.css">
     <script src="js/niln.main.js"></script>
   </head>
-
+  
   <body>
     <div class="container">
-      <div class="question-nav">
-        <div class="question-nav-item">
-          1
-        </div>
-        <div class="question-nav-item">
-          2
-        </div>
-        <div class="question-nav-item">
-          3
-        </div>
-        <div class="question-nav-item">
-          4
-        </div>
-        <div class="question-nav-item">
-          5
-        </div>
-      </div>
-  
+      <div class="question-nav" id="question-nav"></div>
+      
       <div class="question-container">
         <div class="top-nav">
           <div>
@@ -37,9 +21,9 @@
           <div>
             <input type="checkbox" />🚩 Mark
           </div>
-          <div class="question-nav">
-            <button>⬅️</button>
-            <button>➡️</button>
+          <div class="prev-next-nav">
+            <button id="previous">⬅️</button>
+            <button id="next">➡️</button>
           </div>
           <div class="exam-title">
             <p>NILN Is Like NBME</p>
@@ -64,18 +48,21 @@
             </div>
           </div>
         </div>
-  
-        <div class="question-box">
-          <p>A 26 year old medical student is currently on clinical rotations. What should he do with his free time?</p>
         
-          <form>
-            <ol type="a" id="answer-options">
-              <li><input type="radio" name="answer" />See a doctor for his first physical exam in years.</li>
-              <li><input type="radio" name="answer" />Make a fake NBME browser.</li>
-              <li><input type="radio" name="answer" />Sleep.</li>
-              <li><input type="radio" name="answer" />Grind practice questions.</li>
-              <li><input type="radio" name="answer" />Read more.</li>
-            </ol>
+        <div class="question-box">
+          <p id="question"></p>
+
+          <form name="loadFile" id="loadFile">
+            <div>
+              <input id="uploadInput" type="file" />
+            </div>
+            <div>
+              <input type="submit" value="Load Exam" />
+            </div>
+          </form>
+          
+          <form name="answerOptions">
+            <ol type="a" id="answer-options"></ol>
           </form>
         </div>
         

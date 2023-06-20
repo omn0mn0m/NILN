@@ -1,0 +1,25 @@
+{
+    "title": "Example Practice Assessment 1",
+    "questions": [
+        {
+            "question": "A 26 year old medical student is currently on clinical rotations. What should he do with his free time?",
+            "correctAnswer": "Make a fake NBME browser.",
+            "otherOptions": [
+                "See a doctor for his first physical exam in years.",
+                "Sleep.",
+                "Grind practice questions.",
+                "Read more."
+            ]
+        },
+        {
+            "question": "Who is the best character in Genshin Impact?",
+            "correctAnswer": "Hu Tao",
+            "otherOptions": [
+                "Childe",
+                "Zhong Li",
+                "Venti",
+                "Xiao"
+            ]
+        }
+    ]
+}

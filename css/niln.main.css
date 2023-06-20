@@ -1,94 +1,113 @@
 body {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .container {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .question-nav {
-    display: flex;
-    flex-direction:column;
-    height: 100%;
-    width: 200px;
-    overflow: scroll;
+  display: flex;
+  flex-direction:column;
+  max-height: 100vh;
+  width: 200px;
+  overflow: scroll;
+  border-right: 1px solid #dddddd;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: rgba(0,0,0,.5);
+  -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }
 
 .question-nav-item {
-    height: 25px;
-    width: 100%;
-    text-align: center;
+  height: 25px;
+  width: 100%;
+  text-align: center;
 }
 
 .question-nav-item:nth-child(2n) {
-    background-color: #f7f7f7;
+  background-color: #f7f7f7;
+}
+
+.question-nav-item.selected {
+  background-color: #5590cc;
+  color: #f7f7f7;
 }
 
 .question-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  flex-grow: 1;
 }
 
 .question-box {
-    padding: 2em;
+  padding: 2em;
 }
 
 li input
 {
-    position: absolute;
-    margin-left: -40px;
-    margin-top: 5px;
+  position: absolute;
+  margin-left: -40px;
+  margin-top: 5px;
 }
 
-
 .top-nav {
-    background-color: #003163;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+  background-color: #003163;
+  width: 100%;
+  height: 80px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .top-nav div {
-    flex-grow: 1;
-    text-align: center;
-    color: #f7f7f7;
+  flex-grow: 1;
+  text-align: center;
+  color: #f7f7f7;
 }
 
 .top-nav .question-nav {
-    justify-content: center;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
-.question-nav button {
-    font-size: 3em;
-    width: fit-content;
-    height: fit-content;
-    background: transparent;
-    border: none !important;
-    cursor: pointer;
+.prev-next-nav button {
+  font-size: 3em;
+  width: fit-content;
+  height: fit-content;
+  background: transparent;
+  border: none !important;
+  cursor: pointer;
 }
 
 .top-nav .exam-title {
-    flex-grow: 9;
+  flex-grow: 9;
 }
 
 .top-nav .tools {
-    flex-grow: 3;
-    display: flex;
-    flex-direction: row;
+  flex-grow: 3;
+  display: flex;
+  flex-direction: row;
 }
 
 .bottom-nav {
-    background-color: #003163;
-    margin-top: auto;
-    width: 100%;
-    height: 75px;
+  background-color: #003163;
+  margin-top: auto;
+  width: 100%;
+  height: 75px;
 }
+
+
