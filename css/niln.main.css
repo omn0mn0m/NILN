@@ -93,4 +93,29 @@ li input
   align-items: center;
 }
 
+form {
+  margin: 0 auto; 
+  width:250px;
+}
 
+input[type=file]::file-selector-button {
+  margin: 20px;
+  border: none;
+  background: #003163;
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  transition: background .2s ease-in-out;
+}
+
+input[type=submit] {
+  margin: 20px;
+  border: none;
+  background: #003163;
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  transition: background .2s ease-in-out;
+}

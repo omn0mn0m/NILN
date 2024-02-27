@@ -28,7 +28,7 @@ function updateQuestionGUI(question) {
   if (question.scrambledOptions) {
     allOptions = quesetion.options;
   } else {
-    
+
   }
   var allOptions = question.otherOptions.concat(question.correctAnswer);
   allOptions = schwartzianTransform(allOptions);
@@ -55,6 +55,7 @@ function updateQuestionGUI(question) {
 async function loadExam(jsonRaw) {
   exam = JSON.parse(jsonRaw);
   totalQuestions = exam.questions.length;
+  document.getElementById("exam-title").innerText = exam.title;
 
   // Loads the first question
   updateQuestionGUI(exam.questions[0]);
