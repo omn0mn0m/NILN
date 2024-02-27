@@ -10,46 +10,22 @@
   
   <body>
     <div class="container">
-      <div class="question-nav" id="question-nav"></div>
-      
       <div class="question-container">
         <div class="top-nav">
           <div>
-            <p>Item 1 of 40</p>
-            <p>Queestion Id: 6969</p>
+            <p id="question-number">Item 1 of 40</p>
+            <p id="question-id">Queestion ID: 6969</p>
           </div>
           <div>
             <input type="checkbox" />🚩 Mark
-          </div>
-          <div class="prev-next-nav">
-            <button id="previous">⬅️</button>
-            <button id="next">➡️</button>
           </div>
           <div class="exam-title">
             <p>NILN Is Like NBME</p>
             <p>Sample Practice Assessment 1</p>
           </div>
-          <div class="tools">
-            <div style="display: flex; flex-direction: column;">
-              <div style="font-size: 1.5em;">
-                🧪
-              </div>
-              <div>
-                Lab Values
-              </div>
-            </div>
-            <div style="display: flex; flex-direction: column;">
-              <div style="font-size: 1.5em;">
-                🖩
-              </div>
-              <div>
-                Calculator
-              </div>
-            </div>
-          </div>
         </div>
         
-        <div class="question-box">
+        <div id="question-box" class="question-box">
           <p id="question"></p>
 
           <form name="loadFile" id="loadFile">
@@ -67,7 +43,35 @@
         </div>
         
         <div class="bottom-nav">
-          
+          <div class="nav-group">
+            <button id="previous" class="emoji-button">
+              <span class="emoji">⬅️</span>
+              <span>Prev.</span>
+            </button>
+            <button id="next" class="emoji-button">
+              <span class="emoji">➡️</span>
+              <span>Next</span>
+            </button>
+            <button id="end-exam" class="emoji-button">
+              <span class="emoji">🛑</span>
+              <span>End Exam</span>
+            </button>
+          </div>
+
+          <div class="nav-group right">
+            <button id='lab-values' class="emoji-button">
+              <span class="emoji">🧪</span>
+              <span>Lab Values</span>
+            </button>
+            <button id='calculator' class="emoji-button">
+              <span class="emoji">🖩</span>
+              <span>Calculator</span>
+            </button>
+            <button id='settings' class="emoji-button">
+              <span class="emoji">⚙️</span>
+              <span>Settings</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

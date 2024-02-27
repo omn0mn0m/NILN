@@ -16,8 +16,20 @@ function schwartzianTransform(unshuffledArray) {
 
 function updateQuestionGUI(question) {
   document.getElementById("question").innerText = question.question;
+
+  const questionNumber = document.getElementById("question-number");
+  questionNumber.innerText = `Item ${currentQuestion} of ${totalQuestions}`
+
+  const questionId = document.getElementById("question-id");
+  questionId.innerText = `Question ID: ${question.id}`
+
   const answerOptions = document.getElementById("answer-options");
 
+  if (question.scrambledOptions) {
+    allOptions = quesetion.options;
+  } else {
+    
+  }
   var allOptions = question.otherOptions.concat(question.correctAnswer);
   allOptions = schwartzianTransform(allOptions);
 
@@ -28,6 +40,11 @@ function updateQuestionGUI(question) {
     var optionRadioButton = document.createElement("input");
     optionRadioButton.setAttribute("type", "radio");
     optionRadioButton.setAttribute("name", "answer");
+    optionRadioButton.setAttribute("value", option);
+
+    if (option == question.attemptAnswer) {
+      optionRadioButton.setAttribute("checked", '');
+    }
 
     newOption.appendChild(optionRadioButton);
     newOption.appendChild(document.createTextNode(option));
@@ -39,21 +56,6 @@ async function loadExam(jsonRaw) {
   exam = JSON.parse(jsonRaw);
   totalQuestions = exam.questions.length;
 
-  // Question navigation setup
-  var questionNav = document.getElementById("question-nav");
-
-  for (let i = 0; i < totalQuestions; ++i) {
-    var newQuestionNavItem = document.createElement("div");
-    newQuestionNavItem.classList.add("question-nav-item");
-    newQuestionNavItem.textContent = (i + 1);
-
-    if (i == 0) {
-      newQuestionNavItem.classList.add("selected");
-    }
-
-    questionNav.appendChild(newQuestionNavItem);
-  }
-
   // Loads the first question
   updateQuestionGUI(exam.questions[0]);
 
@@ -62,8 +64,6 @@ async function loadExam(jsonRaw) {
 }
 
 document.addEventListener("DOMContentLoaded", async function(event) {
-  questionNavItems = document.getElementsByClassName("question-nav-item");
-
   // GUI events
   document.getElementById("loadFile").addEventListener('submit', (event) => {
     const reader = new FileReader();
@@ -82,22 +82,52 @@ document.addEventListener("DOMContentLoaded", async function(event) {
 
   document.getElementById('previous').addEventListener('click', () => {
     if (currentQuestion != 1) {
-      questionNavItems[currentQuestion - 1].classList.remove("selected");
+      exam.questions[currentQuestion - 1]['attemptAnswer'] = document.querySelector('input[name=answer]:checked')?.value;
       currentQuestion--;
-      questionNavItems[currentQuestion - 1].classList.add("selected");
-
       updateQuestionGUI(exam.questions[currentQuestion - 1]);
     }
   });
 
   document.getElementById('next').addEventListener('click', () => {
     if (currentQuestion != totalQuestions) {
-      questionNavItems[currentQuestion - 1].classList.remove("selected");
+      exam.questions[currentQuestion - 1]['attemptAnswer'] = document.querySelector('input[name=answer]:checked')?.value;
       currentQuestion++;
-      questionNavItems[currentQuestion - 1].classList.add("selected");
-
+      
       updateQuestionGUI(exam.questions[currentQuestion - 1]);
     }
+  });
+
+  document.getElementById('end-exam').addEventListener('click', () => {
+    var grading = []
+
+    exam.questions[currentQuestion - 1]['attemptAnswer'] = document.querySelector('input[name=answer]:checked')?.value;
+
+    exam.questions.forEach(question => {
+      grading.push(question.correctAnswer == question.attemptAnswer);
+    });
+
+    var table = document.createElement('table');
+    table.style.width = '100px';
+    table.style.border = '1px solid black';
+
+    for (var i = 0; i < grading.length; i++) {
+      const tr = table.insertRow();
+
+      const number = tr.insertCell();
+      number.appendChild(document.createTextNode(i + 1));
+
+      const correctStatus = tr.insertCell();
+
+      if (grading[i]) {
+        correctStatus.appendChild(document.createTextNode('✔️'));
+      } else {
+        correctStatus.appendChild(document.createTextNode('❌'));
+      }
+    }
+
+    const questionBox = document.getElementById('question-box');
+    questionBox.innerHTML = '';
+    questionBox.appendChild(table);
   });
 });
 

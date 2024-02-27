@@ -2,6 +2,7 @@
     "title": "Example Practice Assessment 1",
     "questions": [
         {
+            "id": 1,
             "question": "A 26 year old medical student is currently on clinical rotations. What should he do with his free time?",
             "correctAnswer": "Make a fake NBME browser.",
             "otherOptions": [
@@ -12,6 +13,7 @@
             ]
         },
         {
+            "id": 2,
             "question": "Who is the best character in Genshin Impact?",
             "correctAnswer": "Hu Tao",
             "otherOptions": [
