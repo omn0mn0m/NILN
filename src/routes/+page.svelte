@@ -3,6 +3,9 @@
 	 * @type {{ title: string; questions: any[]; } | null}
 	 */
 	let exam;
+	/**
+	 * @type {string}
+	 */
 	let examTitle;
 	/**
 	 * @type {number}
@@ -39,11 +42,12 @@
 	 */
 	let grading = [];
 
+
 	/**
-	 * @param {{ target: { files: any[]; }; }} e
+	 * @param {any} event
 	 */
-	async function onFileChange(e) {
-		const file = e.target.files[0]; // only one exam at a time
+	async function onFileChange(event) {
+		const file = event.target.files[0]; // only one exam at a time
 		if (file == null) {
 			exam = null;
 			return;
@@ -100,20 +104,22 @@
 	 * @param {number} numberToLoad
 	 */
 	function showQuestion(numberToLoad) {
-		const currentQuestion = exam.questions[numberToLoad - 1];
+		if (exam) {
+			const currentQuestion = exam.questions[numberToLoad - 1];
 
-		questionNumber = numberToLoad;
-		questionId = currentQuestion.id;
-		question = currentQuestion.question;
-		answerOptions = currentQuestion.otherOptions.concat(currentQuestion.correctAnswer);
-		selectedAnswer = attemptAnswers[numberToLoad - 1];
+			questionNumber = numberToLoad;
+			questionId = currentQuestion.id;
+			question = currentQuestion.question;
+			answerOptions = currentQuestion.otherOptions.concat(currentQuestion.correctAnswer);
+			selectedAnswer = attemptAnswers[numberToLoad - 1];
+		}
 	}
 </script>
 
 <main>
 	<div class="container">
 		<div class="question-container">
-			<div class="top-nav">
+			<div class="nav">
 				{#if exam && grading.length == 0}
 					<div>
 						<p id="question-number">Item {questionNumber} of {totalQuestions}</p>
@@ -125,7 +131,9 @@
 				{/if}
 				<div class="exam-title">
 					<p>NILN Is Like NBME</p>
-					<p id="exam-title"></p>
+					{#if exam}
+						<p>{examTitle}</p>
+					{/if}
 				</div>
 			</div>
 
@@ -135,32 +143,49 @@
 						{#each grading as grade, index}
 							<tr>
 								<td>{index}</td>
-								<td
-									>{#if grade}✔️{:else}❌{/if}</td
-								>
+								<td>
+									{#if grade}
+										✔️
+									{:else}
+										❌
+									{/if}
+								</td>
 								<td>Review</td>
 							</tr>
 						{/each}
 					</table>
 				{:else if exam}
-					<p id="question">{question}</p>
+					<p id="question" class="left">{question}</p>
 
 					<ol type="A" id="answer-options">
 						{#each answerOptions as option}
 							<li>
 								<input bind:group={selectedAnswer} type="radio" name="answer" value={option} />
-								{option}
+								<span>{option}</span>
 							</li>
 						{/each}
 					</ol>
 				{:else}
+					<p>
+						NILN is a NBME-style online practice exam where you can upload a custom exam file to
+						take. It attempts to simulate the exam-taking experience as closely as possible.
+					</p>
+
+					<p>Disclaimer: NILN does not distribute any copyrighted exam questions.</p>
+
 					<form>
 						<input type="file" on:change={onFileChange} accept=".json" />
 					</form>
+
+					<p>
+						Looking for an exam to try out the software? <a href="/example.json" download
+							>Download our example exam.</a
+						>
+					</p>
 				{/if}
 			</div>
 
-			<div class="bottom-nav">
+			<div class="nav bottom">
 				{#if exam && grading.length == 0}
 					<div class="nav-group">
 						<button on:click={goToPreviousQuestion} class="emoji-button">
@@ -183,13 +208,20 @@
 							<span>Lab Values</span>
 						</button>
 						<button id="calculator" class="emoji-button">
-							<span class="emoji">🖩</span>
+							<span class="emoji">🧮</span>
 							<span>Calculator</span>
 						</button>
 						<button id="settings" class="emoji-button">
 							<span class="emoji">⚙️</span>
 							<span>Settings</span>
 						</button>
+					</div>
+				{:else}
+					<div class="nav-group">
+						<p>Copyright 2024 Nam Tran</p>
+					</div>
+					<div class="nav-group right">
+						<p>Source Code</p>
 					</div>
 				{/if}
 			</div>
@@ -206,17 +238,6 @@
 	.container {
 		display: flex;
 		flex-direction: row;
-	}
-
-	::-webkit-scrollbar {
-		-webkit-appearance: none;
-		width: 10px;
-	}
-
-	::-webkit-scrollbar-thumb {
-		border-radius: 5px;
-		background-color: rgba(0, 0, 0, 0.5);
-		-webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 	}
 
 	.question-container {
@@ -236,20 +257,24 @@
 		margin-top: 5px;
 	}
 
-	.top-nav {
+	.nav {
 		background-color: #003163;
+		color: #f7f7f7;
 		width: 100%;
 		height: 80px;
 		display: flex;
 		flex-direction: row;
-		justify-content: center;
 		align-items: center;
 	}
 
-	.top-nav div {
-		flex-grow: 1;
+    .nav div {
+        padding-left: 8px;
+		padding-right: 8px;
+    }
+
+	.exam-title {
 		text-align: center;
-		color: #f7f7f7;
+		flex-grow: 1;
 	}
 
 	.emoji-button {
@@ -259,17 +284,13 @@
 		background: transparent;
 		border: none !important;
 		cursor: pointer;
-		color: white;
 		text-align: center;
 		font-size: 1em;
+		color: #f7f7f7;
 	}
 
 	.emoji-button .emoji {
 		font-size: 1.5em;
-	}
-
-	.top-nav .exam-title {
-		flex-grow: 16;
 	}
 
 	.nav-group {
@@ -277,19 +298,16 @@
 		flex-direction: row;
 	}
 
+	.left {
+		margin-left: 0;
+	}
+
 	.right {
 		margin-left: auto;
 	}
 
-	.bottom-nav {
-		background-color: #003163;
+	.bottom {
 		margin-top: auto;
-		width: 100%;
-		height: 75px;
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
 	}
 
 	form {
@@ -310,7 +328,7 @@
 
 	.grading-report {
 		border: 1px solid #003163;
-        border-collapse: collapse; 
+		border-collapse: collapse;
 	}
 
 	.grading-report tr:nth-child(even) {
