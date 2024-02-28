@@ -1,5 +1,15 @@
 <script>
-    import Calculator from './Calculator.svelte';
+	import Calculator from './Calculator.svelte';
+	import LabValues from './LabValues.svelte';
+
+	const Mode = {
+		Load: 'Load',
+		Exam: 'Exam',
+		Report: 'Report',
+		Review: 'Review'
+	}
+
+	let mode = Mode.Load;
 
 	/**
 	 * @type {{ title: string; questions: any[]; } | null}
@@ -39,13 +49,15 @@
 	 * @type {string}
 	 */
 	let selectedAnswer;
+	let explanation = '';
+
 	/**
 	 * @type {boolean[]}
 	 */
 	let grading = [];
 
-    let showCalculator = false;
-
+	let showCalculator = false;
+	let showLabValues = false;
 
 	/**
 	 * @param {any} event
@@ -62,11 +74,14 @@
 		if (exam) {
 			attemptAnswers = [];
 			grading = [];
+			explanation = '';
 			examTitle = exam.title;
 			totalQuestions = exam.questions.length;
 
 			// load first question
 			showQuestion(1);
+
+			mode = Mode.Exam;
 		}
 	}
 
@@ -102,6 +117,12 @@
 		exam?.questions.forEach((question, index) => {
 			grading = [...grading, question.correctAnswer == attemptAnswers[index]];
 		});
+
+		mode = Mode.Report;
+	}
+
+	function showScoreReport() {
+		mode = Mode.Report;
 	}
 
 	/**
@@ -116,130 +137,156 @@
 			question = currentQuestion.question;
 			answerOptions = currentQuestion.otherOptions.concat(currentQuestion.correctAnswer);
 			selectedAnswer = attemptAnswers[numberToLoad - 1];
+			explanation = currentQuestion.explanation;
 		}
 	}
 
-    function toggleCalculator() {
-        showCalculator = !showCalculator;
-    }
+	function toggleCalculator() {
+		showCalculator = !showCalculator;
+	}
+
+	function toggleLabValues() {
+		showLabValues = !showLabValues;
+	}
+
+	/**
+	 * @param {number} index
+	 */
+	function showReview(index) {
+		mode = Mode.Review;
+		showQuestion(index + 1);
+	}
 </script>
 
-<main>
-	<div class="container">
-		<div class="question-container">
-			<div class="nav">
-				{#if exam && grading.length == 0}
-					<div>
-						<p id="question-number">Item {questionNumber} of {totalQuestions}</p>
-						<p id="question-id">Question Id: {questionId}</p>
-					</div>
-					<div>
-						<input type="checkbox" />🚩 Mark
-					</div>
-				{/if}
-				<div class="exam-title">
-					<p>NILN Is Like NBME</p>
-					{#if exam}
-						<p>{examTitle}</p>
-					{/if}
-				</div>
+<div class="container">
+	<header class="nav">
+		{#if exam && mode == Mode.Exam}
+			<div>
+				<p id="question-number">Item {questionNumber} of {totalQuestions}</p>
+				<p id="question-id">Question Id: {questionId}</p>
 			</div>
-
-			<div id="question-box" class="question-box">
-				{#if grading.length != 0}
-					<table class="grading-report">
-						{#each grading as grade, index}
-							<tr>
-								<td>{index}</td>
-								<td>
-									{#if grade}
-										✔️
-									{:else}
-										❌
-									{/if}
-								</td>
-								<td>Review</td>
-							</tr>
-						{/each}
-					</table>
-				{:else if exam}
-					<p id="question" class="left">{question}</p>
-
-					<ol type="A" id="answer-options">
-						{#each answerOptions as option}
-							<li>
-								<input bind:group={selectedAnswer} type="radio" name="answer" value={option} />
-								<span>{option}</span>
-							</li>
-						{/each}
-					</ol>
-
-                    {#if showCalculator}
-                    <Calculator />
-                    {/if}
-				{:else}
-					<p>
-						NILN is a NBME-style online practice exam where you can upload a custom exam file to
-						take. It attempts to simulate the exam-taking experience as closely as possible.
-					</p>
-
-					<p>Disclaimer: NILN does not distribute any copyrighted exam questions.</p>
-
-					<form>
-						<input type="file" on:change={onFileChange} accept=".json" />
-					</form>
-
-					<p>
-						Looking for an exam to try out the software? <a href="/example.json" download
-							>Download our example exam.</a
-						>
-					</p>
-				{/if}
+			<div>
+				<input type="checkbox" />🚩 Mark
 			</div>
-
-			<div class="nav bottom">
-				{#if exam && grading.length == 0}
-					<div class="nav-group">
-						<button on:click={goToPreviousQuestion} class="emoji-button">
-							<span class="emoji">⬅️</span>
-							<span>Prev.</span>
-						</button>
-						<button on:click={goToNextQuestion} class="emoji-button">
-							<span class="emoji">➡️</span>
-							<span>Next</span>
-						</button>
-						<button on:click={endExam} class="emoji-button">
-							<span class="emoji">🛑</span>
-							<span>End Exam</span>
-						</button>
-					</div>
-
-					<div class="nav-group right">
-						<button id="lab-values" class="emoji-button">
-							<span class="emoji">🧪</span>
-							<span>Lab Values</span>
-						</button>
-						<button on:click={toggleCalculator} class="emoji-button">
-							<span class="emoji">🧮</span>
-							<span>Calculator</span>
-						</button>
-						<button id="settings" class="emoji-button">
-							<span class="emoji">⚙️</span>
-							<span>Settings</span>
-						</button>
-					</div>
-				{:else}
-					<div class="nav-group">
-						<p>Copyright 2024 Nam Tran</p>
-					</div>
-					<div class="nav-group right">
-						<p>Source Code</p>
-					</div>
-				{/if}
-			</div>
+		{/if}
+		<div class="exam-title">
+			<p>NILN Is Like NBME</p>
+			{#if exam}
+				<p>{examTitle}</p>
+			{/if}
 		</div>
-	</div>
-</main>
+	</header>
+
+	<main>
+		<div class="question-box">
+			{#if mode == Mode.Report}
+				<table class="grading-report">
+					{#each grading as grade, index}
+						<tr>
+							<td>{index + 1}</td>
+							<td>
+								{#if grade}
+									✔️
+								{:else}
+									❌
+								{/if}
+							</td>
+							<td><button on:click={() => showReview(index)} class="review-button">Review</button></td>
+						</tr>
+					{/each}
+				</table>
+			{:else if mode == Mode.Exam || mode == Mode.Review}
+				<p id="question" class="left">{question}</p>
+
+				<ol type="A" id="answer-options">
+					{#each answerOptions as option}
+						<li>
+							<input bind:group={selectedAnswer} type="radio" name="answer" value={option} />
+							<span>{option}</span>
+						</li>
+					{/each}
+				</ol>
+
+				{#if mode == Mode.Review}
+				<h3>Explanation:</h3>
+				<p>{explanation}</p>
+				{/if}
+
+				{#if showCalculator}
+					<Calculator />
+				{/if}
+			{:else}
+				<p>
+					NILN is a NBME-style online practice exam where you can upload a custom exam file to take.
+					It attempts to simulate the exam-taking experience as closely as possible.
+				</p>
+
+				<p>Disclaimer: NILN does not distribute any copyrighted exam questions.</p>
+
+				<form>
+					<input type="file" on:change={onFileChange} accept=".json" />
+				</form>
+
+				<p>
+					Looking for an exam to try out the software? <a href="/example.json" download
+						>Download our example exam.</a
+					>
+				</p>
+			{/if}
+		</div>
+		{#if showLabValues}
+			<LabValues />
+		{/if}
+	</main>
+
+	<footer class="nav bottom">
+		{#if mode == Mode.Exam || mode == Mode.Review}
+			<div class="nav-group">
+				<button on:click={goToPreviousQuestion} class="emoji-button">
+					<span class="emoji">⬅️</span>
+					<span>Prev.</span>
+				</button>
+				<button on:click={goToNextQuestion} class="emoji-button">
+					<span class="emoji">➡️</span>
+					<span>Next</span>
+				</button>
+				{#if mode == Mode.Exam}
+				<button on:click={endExam} class="emoji-button">
+					<span class="emoji">🛑</span>
+					<span>End Exam</span>
+				</button>
+				{:else if mode == Mode.Review}
+				<button on:click={showScoreReport} class="emoji-button">
+					<span class="emoji">📄</span>
+					<span>Score Report</span>
+				</button>
+				{/if}
+			</div>
+
+			<div class="nav-group right">
+				<button on:click={toggleLabValues} class="emoji-button">
+					<span class="emoji">🧪</span>
+					<span>Lab Values</span>
+				</button>
+				<button on:click={toggleCalculator} class="emoji-button">
+					<span class="emoji">🧮</span>
+					<span>Calculator</span>
+				</button>
+				<button id="settings" class="emoji-button">
+					<span class="emoji">⚙️</span>
+					<span>Settings</span>
+				</button>
+			</div>
+		{:else}
+			<div class="nav-group">
+				<p>Copyright 2024 Nam Tran</p>
+			</div>
+			<div class="nav-group right">
+				<p>Source Code</p>
+			</div>
+		{/if}
+	</footer>
+</div>
 
 <style>
 	:global(body) {
@@ -247,19 +294,20 @@
 		padding: 0;
 	}
 
-	.container {
+	main {
 		display: flex;
-		flex-direction: row;
 	}
 
-	.question-container {
-		display: flex;
-		flex-direction: column;
-		height: 100vh;
-		flex-grow: 1;
+	.container {
+		display: grid;
+		grid-template-rows: auto 1fr auto;
+		grid-template-columns: 100%;
+		min-height: 100vh;
+		min-height: 100svh;
 	}
 
 	.question-box {
+		flex: 1;
 		padding: 2em;
 	}
 
@@ -279,10 +327,10 @@
 		align-items: center;
 	}
 
-    .nav div {
-        padding-left: 8px;
+	.nav div {
+		padding-left: 8px;
 		padding-right: 8px;
-    }
+	}
 
 	.exam-title {
 		text-align: center;
@@ -349,5 +397,13 @@
 
 	.grading-report td {
 		padding: 6px;
+	}
+
+	.review-button {
+		cursor: pointer;
+		text-decoration: underline;
+		color: #0000ee;
+		background: transparent;
+		border: none !important;
 	}
 </style>

@@ -10,7 +10,8 @@
                 "Sleep.",
                 "Grind practice questions.",
                 "Read more."
-            ]
+            ],
+            "explanation": "Being productive is bad."
         },
         {
             "id": 2,
@@ -21,7 +22,8 @@
                 "Zhong Li",
                 "Venti",
                 "Xiao"
-            ]
+            ],
+            "explanation": "She raps, idk."
         }
     ]
 }

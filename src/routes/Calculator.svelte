@@ -21,12 +21,15 @@
 
     let expression = ''
 
+    /**
+	 * @param {string} value
+	 */
     function onNumberPress(value) {
         expression += value;
     }
 </script>
 
-<section on:mousedown={onMouseDown} style="left: {left}px; top: {top}px;" class="draggable">
+<section on:mousedown={onMouseDown} role='form' aria-label='calculator' style="left: {left}px; top: {top}px;" class="draggable">
 	<table id="calculator">
 		<tr>
 			<td colspan="3">
