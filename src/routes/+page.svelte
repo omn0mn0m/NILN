@@ -1,4 +1,6 @@
 <script>
+    import Calculator from './Calculator.svelte';
+
 	/**
 	 * @type {{ title: string; questions: any[]; } | null}
 	 */
@@ -41,6 +43,8 @@
 	 * @type {boolean[]}
 	 */
 	let grading = [];
+
+    let showCalculator = false;
 
 
 	/**
@@ -114,6 +118,10 @@
 			selectedAnswer = attemptAnswers[numberToLoad - 1];
 		}
 	}
+
+    function toggleCalculator() {
+        showCalculator = !showCalculator;
+    }
 </script>
 
 <main>
@@ -165,6 +173,10 @@
 							</li>
 						{/each}
 					</ol>
+
+                    {#if showCalculator}
+                    <Calculator />
+                    {/if}
 				{:else}
 					<p>
 						NILN is a NBME-style online practice exam where you can upload a custom exam file to
@@ -207,7 +219,7 @@
 							<span class="emoji">🧪</span>
 							<span>Lab Values</span>
 						</button>
-						<button id="calculator" class="emoji-button">
+						<button on:click={toggleCalculator} class="emoji-button">
 							<span class="emoji">🧮</span>
 							<span>Calculator</span>
 						</button>
