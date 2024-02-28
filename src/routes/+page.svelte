@@ -97,22 +97,28 @@
 		});
 	}
 
+	function saveQuestionChanges() {
+		attemptAnswers[questionNumber - 1] = selectedAnswer;
+		exam.questions[questionNumber - 1].question = question;
+		exam.questions[questionNumber - 1].answerOptions = answerOptions;
+	}
+
 	function goToPreviousQuestion() {
 		if (questionNumber != 1) {
-			attemptAnswers[questionNumber - 1] = selectedAnswer;
+			saveQuestionChanges()
 			showQuestion(questionNumber - 1);
 		}
 	}
 
 	function goToNextQuestion() {
 		if (questionNumber != totalQuestions) {
-			attemptAnswers[questionNumber - 1] = selectedAnswer;
+			saveQuestionChanges()
 			showQuestion(questionNumber + 1);
 		}
 	}
 
 	function endExam() {
-		attemptAnswers[questionNumber - 1] = selectedAnswer;
+		saveQuestionChanges()
 
 		exam?.questions.forEach((question, index) => {
 			grading = [...grading, question.correctAnswer == attemptAnswers[index]];
@@ -135,7 +141,7 @@
 			questionNumber = numberToLoad;
 			questionId = currentQuestion.id;
 			question = currentQuestion.question;
-			answerOptions = currentQuestion.otherOptions.concat(currentQuestion.correctAnswer);
+			answerOptions = currentQuestion.answerOptions;
 			selectedAnswer = attemptAnswers[numberToLoad - 1];
 			explanation = currentQuestion.explanation;
 		}
@@ -155,6 +161,32 @@
 	function showReview(index) {
 		mode = Mode.Review;
 		showQuestion(index + 1);
+	}
+
+	function highlight() {
+		if (window.getSelection) {
+			const selection = window.getSelection()?.toString();
+
+			if (selection) {
+				question = question.replace(selection, `<mark>${selection}</mark>`);
+			}
+		}
+	}
+
+	function unhighlight(event) {
+		if (event.target.tagName == 'MARK') {
+			question = question.replace(event.target.outerHTML, event.target.outerText);
+		}
+	}
+
+	function toggleStrikethrough(event) {
+		if (event.target.tagName == 'DEL') {
+			const index = answerOptions.indexOf(event.target.outerHTML);
+			answerOptions[index] = event.target.outerText;
+		} else {
+			const index = answerOptions.indexOf(event.target.outerText);
+			answerOptions[index] = `<del>${event.target.outerText}</del>`;
+		}
 	}
 </script>
 
@@ -196,13 +228,13 @@
 					{/each}
 				</table>
 			{:else if mode == Mode.Exam || mode == Mode.Review}
-				<p id="question" class="left">{question}</p>
+				<p on:click={unhighlight} on:mouseup={highlight} id="question" class="left">{@html question}</p>
 
 				<ol type="A" id="answer-options">
 					{#each answerOptions as option}
 						<li>
 							<input bind:group={selectedAnswer} type="radio" name="answer" value={option} />
-							<span>{option}</span>
+							<span on:click={toggleStrikethrough}>{@html option}</span>
 						</li>
 					{/each}
 				</ol>
