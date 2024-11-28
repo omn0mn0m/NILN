@@ -7,7 +7,7 @@
 		Exam: 'Exam',
 		Report: 'Report',
 		Review: 'Review'
-	}
+	};
 
 	let mode = Mode.Load;
 
@@ -105,20 +105,20 @@
 
 	function goToPreviousQuestion() {
 		if (questionNumber != 1) {
-			saveQuestionChanges()
+			saveQuestionChanges();
 			showQuestion(questionNumber - 1);
 		}
 	}
 
 	function goToNextQuestion() {
 		if (questionNumber != totalQuestions) {
-			saveQuestionChanges()
+			saveQuestionChanges();
 			showQuestion(questionNumber + 1);
 		}
 	}
 
 	function endExam() {
-		saveQuestionChanges()
+		saveQuestionChanges();
 
 		exam?.questions.forEach((question, index) => {
 			grading = [...grading, question.correctAnswer == attemptAnswers[index]];
@@ -223,12 +223,17 @@
 									❌
 								{/if}
 							</td>
-							<td><button on:click={() => showReview(index)} class="review-button">Review</button></td>
+							<td
+								><button on:click={() => showReview(index)} class="review-button">Review</button
+								></td
+							>
 						</tr>
 					{/each}
 				</table>
 			{:else if mode == Mode.Exam || mode == Mode.Review}
-				<p on:click={unhighlight} on:mouseup={highlight} id="question" class="left">{@html question}</p>
+				<p on:click={unhighlight} on:mouseup={highlight} id="question" class="left">
+					{@html question}
+				</p>
 
 				<ol type="A" id="answer-options">
 					{#each answerOptions as option}
@@ -240,8 +245,8 @@
 				</ol>
 
 				{#if mode == Mode.Review}
-				<h3>Explanation:</h3>
-				<p>{explanation}</p>
+					<h3>Explanation:</h3>
+					<p>{explanation}</p>
 				{/if}
 
 				{#if showCalculator}
@@ -283,15 +288,15 @@
 					<span>Next</span>
 				</button>
 				{#if mode == Mode.Exam}
-				<button on:click={endExam} class="emoji-button">
-					<span class="emoji">🛑</span>
-					<span>End Exam</span>
-				</button>
+					<button on:click={endExam} class="emoji-button">
+						<span class="emoji">🛑</span>
+						<span>End Exam</span>
+					</button>
 				{:else if mode == Mode.Review}
-				<button on:click={showScoreReport} class="emoji-button">
-					<span class="emoji">📄</span>
-					<span>Score Report</span>
-				</button>
+					<button on:click={showScoreReport} class="emoji-button">
+						<span class="emoji">📄</span>
+						<span>Score Report</span>
+					</button>
 				{/if}
 			</div>
 
